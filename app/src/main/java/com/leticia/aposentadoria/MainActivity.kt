@@ -18,24 +18,34 @@ class MainActivity : AppCompatActivity() {
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val items= listOf("masculino", "feminino")
+        val items = listOf("masculino","feminino")
 
-        val adapter= ArrayAdapter(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,items)
+        val adapter = ArrayAdapter(this, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, items)
 
-        binding.spinnerSexo.adapter=adapter
+        binding.spinnerSexo.adapter= adapter
 
         binding.buttonCalcular.setOnClickListener{
             val sexoSelecionado = binding.spinnerSexo.selectedItem as String
-            var idade = binding.editIdade.text.toString().toLongOrNull()
-            var resultado: Long
+            val idade = binding.editIdade.text.toString().toLongOrNull()
 
-            if (sexoSelecionado.trim()=="masculino"){
-                resultado = 65 - idade!!
-
-            }else{
-                resultado = 62 - idade!!
+            if (idade == null) {
+                binding.textviewResultado.text = "Por favor, insira uma idade válida"
+                return@setOnClickListener
             }
-            binding.textviewResultado.text = "Faltam $resultado anos para você se aposentar"
+
+            val idadeMinima = if (sexoSelecionado.trim() == "masculino") 65 else 62
+            val anosRestantes = idadeMinima - idade
+
+            if (anosRestantes <= 0) {
+                binding.textviewResultado.text = "Você já pode se aposentar"
+            } else {
+                binding.textviewResultado.text = "Faltam $anosRestantes anos para você se aposentar"
+            }
+
+
+
+
+
         }
 
     }
